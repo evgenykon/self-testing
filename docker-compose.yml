@@ -1,0 +1,35 @@
+services:
+  dev:
+    build:
+      context: .
+      target: dev
+    command: npm run dev -- --host 0.0.0.0
+    ports:
+      - "3000:3000"
+    environment:
+      NUXT_APP_BASE_URL: ${NUXT_APP_BASE_URL:-/}
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+
+  build:
+    build:
+      context: .
+      target: dev
+    command: npm run generate
+    environment:
+      NUXT_APP_BASE_URL: ${NUXT_APP_BASE_URL:-/}
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+
+  preview:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./.output/public:/usr/share/nginx/html:ro
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+volumes:
+  node_modules:

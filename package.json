@@ -1,0 +1,37 @@
+{
+  "name": "self-testing",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "content:build": "node scripts/build-content.ts",
+    "dev": "npm run content:build && nuxt dev",
+    "build": "npm run content:build && nuxt build",
+    "generate": "npm run content:build && nuxt generate",
+    "preview": "nuxt preview",
+    "lint": "npm run content:build && nuxt prepare && eslint .",
+    "typecheck": "npm run content:build && nuxt typecheck",
+    "test": "nuxt prepare && vitest run",
+    "test:watch": "nuxt prepare && vitest"
+  },
+  "dependencies": {
+    "nuxt": "^4.6.0",
+    "vue": "^3.5.43"
+  },
+  "devDependencies": {
+    "@nuxt/eslint": "^1.17.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/markdown-it": "^14.2.0",
+    "@types/node": "^26.6.4",
+    "eslint": "^10.12.0",
+    "gray-matter": "^4.0.3",
+    "katex": "^0.19.0",
+    "markdown-it": "^14.3.2",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.3",
+    "vue-tsc": "^3.3.12"
+  }
+}

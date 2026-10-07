@@ -1,0 +1,10 @@
+node_modules
+.nuxt
+.output
+.data
+.git
+.github
+app/generated
+public/tests-assets
+*.log
+.DS_Store
