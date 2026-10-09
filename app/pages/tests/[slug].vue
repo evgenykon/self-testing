@@ -13,6 +13,7 @@ const {
   isLocked,
   canGoBack,
   hasTimer,
+  isCurrentUnknown,
   results,
   totalScore,
   maxScore,
@@ -25,6 +26,7 @@ const {
   goNext,
   goBack,
   setAnswer,
+  markUnknown,
 } = useTestRunner(slug)
 
 useHead({ title: () => test.value?.title ?? 'Тест' })
@@ -103,6 +105,7 @@ function confirmFinish() {
             но можно перейти к следующему вопросу.
           </li>
           <li>· При новом запуске вопросы и варианты перемешиваются, ответы и время сбрасываются.</li>
+          <li>· Кнопка «Я не знаю» сохраняет вопрос с правильным ответом в список для разбора и переходит дальше (0 баллов).</li>
         </ul>
 
         <button
@@ -129,7 +132,9 @@ function confirmFinish() {
         :total="runQuestions.length"
         :model-value="currentAnswer"
         :locked="isLocked"
+        :marked="isCurrentUnknown"
         @update:model-value="updateAnswer"
+        @unknown="markUnknown"
       />
 
       <div class="flex items-center justify-between gap-3">

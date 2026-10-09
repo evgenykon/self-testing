@@ -1,7 +1,7 @@
 import { scoreInput, scoreMultiple, scoreSingle, type Score } from '#shared/scoring'
 import { shuffle } from '#shared/shuffle'
 import { loadTest } from '~/lib/loader'
-import type { QuestionResult, RuntimeQuestion, RuntimeTest } from '~/lib/test-types'
+import type { QuestionResult, RuntimeQuestion, RuntimeTest, UnknownQuestionRecord } from '~/lib/test-types'
 
 export type RunnerPhase = 'loading' | 'idle' | 'running' | 'finished' | 'notfound'
 
@@ -15,8 +15,13 @@ export function useTestRunner(slug: string) {
   const remainingMs = ref(0)
   const totalMs = ref(0)
 
+  const { addAttempt } = useAttempts()
+  const unknownStore = useUnknownQuestions()
+
   let timerId: ReturnType<typeof setInterval> | null = null
   let deadline = 0
+  let startedAt = 0
+  let recorded = false
 
   onMounted(async () => {
     const loaded = await loadTest(slug)
@@ -77,6 +82,8 @@ export function useTestRunner(slug: string) {
     answers.value = {}
     locked.value = {}
     currentIndex.value = 0
+    startedAt = Date.now()
+    recorded = false
     phase.value = 'running'
     if (loaded.timer.mode === 'test') {
       arm((loaded.timer.seconds ?? 0) * 1000)
@@ -94,6 +101,56 @@ export function useTestRunner(slug: string) {
   function finish() {
     clearTimer()
     phase.value = 'finished'
+    recordAttempt()
+  }
+
+  function recordAttempt() {
+    const loaded = test.value
+    if (recorded || !loaded || runQuestions.value.length === 0) {
+      return
+    }
+    recorded = true
+    const finishedAt = Date.now()
+    const score = totalScore.value
+    const max = maxScore.value
+    addAttempt({
+      id: `${finishedAt}-${Math.random().toString(36).slice(2, 8)}`,
+      slug: loaded.slug,
+      title: loaded.title,
+      score,
+      maxScore: max,
+      percent: max > 0 ? Math.round((score / max) * 100) : 0,
+      finishedAt,
+      durationMs: startedAt > 0 ? finishedAt - startedAt : 0,
+    })
+  }
+
+  function markUnknown() {
+    const loaded = test.value
+    const question = currentQuestion.value
+    if (!loaded || !question || phase.value !== 'running') {
+      return
+    }
+    if (unknownStore.isMarked(loaded.slug, question.id)) {
+      unknownStore.unmark(loaded.slug, question.id)
+      return
+    }
+    const correctIds = loaded.correct[question.id] ?? []
+    const record: UnknownQuestionRecord = {
+      key: `${loaded.slug}:${question.id}`,
+      slug: loaded.slug,
+      testTitle: loaded.title,
+      questionId: question.id,
+      type: question.type,
+      questionHtml: question.html,
+      correctHtmls: correctIds.map(id => question.choices.find(choice => choice.id === id)?.html ?? ''),
+      accepted: [...question.accepted],
+      explanationHtml: question.explanationHtml,
+      markedAt: Date.now(),
+    }
+    unknownStore.mark(record)
+    answers.value = { ...answers.value, [question.id]: [] }
+    goNext()
   }
 
   function goNext() {
@@ -132,6 +189,11 @@ export function useTestRunner(slug: string) {
   })
   const canGoBack = computed(() => test.value?.timer.mode !== 'question' && currentIndex.value > 0)
   const hasTimer = computed(() => test.value?.timer.mode === 'test' || test.value?.timer.mode === 'question')
+  const isCurrentUnknown = computed(() => {
+    const loaded = test.value
+    const question = currentQuestion.value
+    return Boolean(loaded && question && unknownStore.isMarked(loaded.slug, question.id))
+  })
 
   const results = computed<QuestionResult[]>(() => runQuestions.value.map((question) => {
     const selected = answers.value[question.id] ?? []
@@ -208,6 +270,7 @@ export function useTestRunner(slug: string) {
     isLocked,
     canGoBack,
     hasTimer,
+    isCurrentUnknown,
     results,
     totalScore,
     maxScore,
@@ -220,5 +283,6 @@ export function useTestRunner(slug: string) {
     goNext,
     goBack,
     setAnswer,
+    markUnknown,
   }
 }

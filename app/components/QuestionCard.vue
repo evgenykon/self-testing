@@ -7,9 +7,10 @@ const props = defineProps<{
   total: number
   modelValue: string[]
   locked: boolean
+  marked: boolean
 }>()
 
-const emit = defineEmits<{ 'update:modelValue': [value: string[]] }>()
+const emit = defineEmits<{ 'update:modelValue': [value: string[]], 'unknown': [] }>()
 
 const typeLabel = computed(() => questionTypeLabel(props.question.type))
 
@@ -43,7 +44,22 @@ function onTextInput(event: Event) {
       <span class="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-medium text-indigo-700">
         {{ typeLabel }}
       </span>
-      <span class="text-xs text-slate-400">Вопрос {{ index + 1 }} из {{ total }}</span>
+      <div class="flex items-center gap-2">
+        <button
+          type="button"
+          class="rounded-full border px-3 py-1 text-xs font-medium transition"
+          :class="marked
+            ? 'border-amber-400 bg-amber-50 text-amber-700 hover:bg-amber-100'
+            : 'border-slate-300 text-slate-600 hover:border-amber-400 hover:bg-amber-50 hover:text-amber-700'"
+          :title="marked
+            ? 'Убрать вопрос из списка для разбора'
+            : 'Сохранить вопрос с правильным ответом для разбора и перейти дальше'"
+          @click="emit('unknown')"
+        >
+          {{ marked ? 'Отмечено' : 'Я не знаю' }}
+        </button>
+        <span class="text-xs text-slate-400">Вопрос {{ index + 1 }} из {{ total }}</span>
+      </div>
     </header>
 
     <div class="md-content text-[1.02rem]" v-html="question.html" />

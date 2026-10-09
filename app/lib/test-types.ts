@@ -44,3 +44,27 @@ export interface QuestionResult {
   score: Score
   correctIds: string[]
 }
+
+export interface AttemptRecord {
+  id: string
+  slug: string
+  title: string
+  score: number
+  maxScore: number
+  percent: number
+  finishedAt: number
+  durationMs: number
+}
+
+export interface UnknownQuestionRecord {
+  key: string
+  slug: string
+  testTitle: string
+  questionId: string
+  type: QuestionType
+  questionHtml: string
+  correctHtmls: string[]
+  accepted: string[]
+  explanationHtml: string | null
+  markedAt: number
+}

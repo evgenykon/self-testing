@@ -13,6 +13,16 @@ export function formatDuration(totalSeconds: number): string {
   return `${minutes} мин ${rest} с`
 }
 
+export function formatDateTime(ts: number): string {
+  return new Date(ts).toLocaleString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
 export function formatClock(ms: number): string {
   const total = Math.max(0, Math.ceil(ms / 1000))
   const minutes = Math.floor(total / 60)

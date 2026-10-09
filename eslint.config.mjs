@@ -12,7 +12,7 @@ export default withNuxt(
   },
   {
     // HTML собирается на этапе сборки из markdown с html: false, поэтому v-html безопасен
-    files: ['app/components/QuestionCard.vue', 'app/components/ResultsView.vue'],
+    files: ['app/components/QuestionCard.vue', 'app/components/ResultsView.vue', 'app/pages/review.vue'],
     rules: {
       'vue/no-v-html': 'off',
     },
