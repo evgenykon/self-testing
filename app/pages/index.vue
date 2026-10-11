@@ -1,5 +1,17 @@
 <script setup lang="ts">
 const { topics, tests, totalQuestions } = useTestsIndex()
+const { attempts } = useAttempts()
+
+const bestBySlug = computed(() => {
+  const map = new Map<string, number>()
+  for (const attempt of attempts.value) {
+    const current = map.get(attempt.slug)
+    if (current === undefined || attempt.percent > current) {
+      map.set(attempt.slug, attempt.percent)
+    }
+  }
+  return map
+})
 
 useHead({ title: 'Все тесты' })
 </script>
@@ -26,7 +38,12 @@ useHead({ title: 'Все тесты' })
         </span>
       </h2>
       <div class="grid gap-4 sm:grid-cols-2">
-        <TestCard v-for="test in topic.tests" :key="test.slug" :test="test" />
+        <TestCard
+          v-for="test in topic.tests"
+          :key="test.slug"
+          :test="test"
+          :best-percent="bestBySlug.get(test.slug) ?? null"
+        />
       </div>
     </section>
 
