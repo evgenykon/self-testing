@@ -1,6 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const { topics, tests } = useTestsIndex()
+const { bestBySlug } = useAttempts()
 const { count: unknownCount } = useUnknownQuestions()
 
 function isActive(slug: string): boolean {
@@ -55,12 +56,17 @@ function linkClass(path: string): string {
               ? 'bg-indigo-50 font-medium text-indigo-700'
               : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'"
           >
-            {{ test.title }}
-            <span
-              class="mt-0.5 block text-xs"
-              :class="isActive(test.slug) ? 'text-indigo-500' : 'text-slate-400'"
-            >
-              {{ test.questionCount }} {{ plural(test.questionCount, 'вопрос', 'вопроса', 'вопросов') }}
+            <span class="flex items-start gap-1.5">
+              <ResultCheckIcon :best-percent="bestBySlug.get(test.slug) ?? null" class="mt-0.5 h-3.5 w-3.5" />
+              <span class="min-w-0">
+                {{ test.title }}
+                <span
+                  class="mt-0.5 block text-xs"
+                  :class="isActive(test.slug) ? 'text-indigo-500' : 'text-slate-400'"
+                >
+                  {{ test.questionCount }} {{ plural(test.questionCount, 'вопрос', 'вопроса', 'вопросов') }}
+                </span>
+              </span>
             </span>
           </NuxtLink>
         </li>

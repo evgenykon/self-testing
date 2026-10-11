@@ -17,5 +17,16 @@ export function useAttempts() {
     store.persist()
   }
 
-  return { attempts: store.items, ready: store.ready, addAttempt, clearAttempts }
+  const bestBySlug = computed(() => {
+    const map = new Map<string, number>()
+    for (const attempt of store.items.value) {
+      const current = map.get(attempt.slug)
+      if (current === undefined || attempt.percent > current) {
+        map.set(attempt.slug, attempt.percent)
+      }
+    }
+    return map
+  })
+
+  return { attempts: store.items, bestBySlug, ready: store.ready, addAttempt, clearAttempts }
 }

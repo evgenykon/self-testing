@@ -1,17 +1,6 @@
 <script setup lang="ts">
 const { topics, tests, totalQuestions } = useTestsIndex()
-const { attempts } = useAttempts()
-
-const bestBySlug = computed(() => {
-  const map = new Map<string, number>()
-  for (const attempt of attempts.value) {
-    const current = map.get(attempt.slug)
-    if (current === undefined || attempt.percent > current) {
-      map.set(attempt.slug, attempt.percent)
-    }
-  }
-  return map
-})
+const { bestBySlug } = useAttempts()
 
 useHead({ title: 'Все тесты' })
 </script>
