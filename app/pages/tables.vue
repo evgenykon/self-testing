@@ -154,7 +154,7 @@ const integralRows: PairRow[] = [
           <tbody>
             <tr v-for="(row, index) in logPropertyRows" :key="index">
               <td><MathTex :tex="row.first" /></td>
-              <td><MathTex :tex="row.second" /></td>
+              <td>{{ row.second }}</td>
             </tr>
           </tbody>
         </table>
