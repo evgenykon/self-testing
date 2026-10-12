@@ -12,11 +12,19 @@ interface PairRow {
   second: string
 }
 
+interface ConstRow {
+  name: string
+  symbol: string
+  value: string
+  unit: string
+}
+
 const toc = [
   { id: 'sinus', title: 'Таблица синусов' },
   { id: 'logarithms', title: 'Свойства логарифмов' },
   { id: 'derivatives', title: 'Таблица производных' },
   { id: 'integrals', title: 'Таблица интегралов' },
+  { id: 'constants', title: 'Физические константы' },
 ]
 
 const sinRows: SinRow[] = [
@@ -85,6 +93,22 @@ const integralRows: PairRow[] = [
   { first: '\\int \\dfrac{dx}{a^2 + x^2}', second: '\\dfrac{1}{a} \\arctg \\dfrac{x}{a} + C' },
   { first: '\\int \\dfrac{dx}{x^2 - a^2}', second: '\\dfrac{1}{2a} \\ln \\left| \\dfrac{x - a}{x + a} \\right| + C' },
 ]
+
+const constRows: ConstRow[] = [
+  { name: 'Скорость света в вакууме', symbol: 'c', value: '3 \\cdot 10^8', unit: 'м/с' },
+  { name: 'Гравитационная постоянная', symbol: 'G', value: '6.67 \\cdot 10^{-11}', unit: 'Н·м²/кг²' },
+  { name: 'Ускорение свободного падения', symbol: 'g', value: '9.8', unit: 'м/с²' },
+  { name: 'Постоянная Авогадро', symbol: 'N_A', value: '6.02 \\cdot 10^{23}', unit: 'моль⁻¹' },
+  { name: 'Универсальная газовая постоянная', symbol: 'R', value: '8.31', unit: 'Дж/(моль·К)' },
+  { name: 'Постоянная Больцмана', symbol: 'k', value: '1.38 \\cdot 10^{-23}', unit: 'Дж/К' },
+  { name: 'Элементарный заряд', symbol: 'e', value: '1.6 \\cdot 10^{-19}', unit: 'Кл' },
+  { name: 'Масса электрона', symbol: 'm_e', value: '9.11 \\cdot 10^{-31}', unit: 'кг' },
+  { name: 'Масса протона', symbol: 'm_p', value: '1.67 \\cdot 10^{-27}', unit: 'кг' },
+  { name: 'Постоянная Планка', symbol: 'h', value: '6.63 \\cdot 10^{-34}', unit: 'Дж·с' },
+  { name: 'Электрическая постоянная', symbol: '\\varepsilon_0', value: '8.85 \\cdot 10^{-12}', unit: 'Ф/м' },
+  { name: 'Нормальное атмосферное давление', symbol: 'p_0', value: '1.013 \\cdot 10^5', unit: 'Па' },
+  { name: 'Плотность воды', symbol: '\\rho', value: '1000', unit: 'кг/м³' },
+]
 </script>
 
 <template>
@@ -92,8 +116,8 @@ const integralRows: PairRow[] = [
     <header>
       <h1 class="text-3xl font-bold tracking-tight text-slate-900">Справочные таблицы</h1>
       <p class="mt-2 max-w-2xl text-slate-600">
-        Часто используемые значения и формулы: тригонометрия, логарифмы, производные и интегралы.
-        Удобно держать под рукой при прохождении тестов.
+        Часто используемые значения и формулы: тригонометрия, логарифмы, производные, интегралы
+        и физические константы. Удобно держать под рукой при прохождении тестов.
       </p>
     </header>
 
@@ -197,6 +221,31 @@ const integralRows: PairRow[] = [
             <tr v-for="(row, index) in integralRows" :key="index">
               <td><MathTex :tex="row.first" /></td>
               <td><MathTex :tex="row.second" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="constants" class="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+      <h2 class="text-xl font-semibold text-slate-900">Таблица физических констант</h2>
+      <p class="mt-1.5 text-sm text-slate-500">Приближённые значения основных физических постоянных.</p>
+      <div class="md-content mt-4 overflow-x-auto">
+        <table class="w-full">
+          <thead>
+            <tr>
+              <th class="text-left">Константа</th>
+              <th class="w-1/5 text-left">Обозначение</th>
+              <th class="text-left">Значение</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in constRows" :key="row.name">
+              <td>{{ row.name }}</td>
+              <td><MathTex :tex="row.symbol" /></td>
+              <td class="whitespace-nowrap">
+                <MathTex :tex="row.value" /> {{ row.unit }}
+              </td>
             </tr>
           </tbody>
         </table>
