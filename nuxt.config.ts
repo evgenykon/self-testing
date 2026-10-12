@@ -46,7 +46,7 @@ export default defineNuxtConfig({
   },
   prerender: {
     crawlLinks: true,
-    routes: ['/', '/stats', '/review', ...generatedTestRoutes()],
+    routes: ['/', '/stats', '/review', '/tables', ...generatedTestRoutes()],
   },
   experimental: {
     payloadExtraction: false,

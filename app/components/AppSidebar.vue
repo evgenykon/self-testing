@@ -38,6 +38,13 @@ function linkClass(path: string): string {
           {{ unknownCount }}
         </span>
       </NuxtLink>
+      <NuxtLink
+        to="/tables"
+        class="block rounded-lg px-3 py-2 text-sm transition"
+        :class="linkClass('/tables')"
+      >
+        Справочные таблицы
+      </NuxtLink>
     </div>
 
     <p v-if="!tests.length" class="px-3 py-2 text-sm text-slate-500">
