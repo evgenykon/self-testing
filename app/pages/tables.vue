@@ -7,12 +7,6 @@ interface SinRow {
   sin: string
 }
 
-interface LogRow {
-  n: string
-  lg: string
-  ln: string
-}
-
 interface PairRow {
   first: string
   second: string
@@ -20,7 +14,7 @@ interface PairRow {
 
 const toc = [
   { id: 'sinus', title: 'Таблица синусов' },
-  { id: 'logarithms', title: 'Таблица логарифмов' },
+  { id: 'logarithms', title: 'Свойства логарифмов' },
   { id: 'derivatives', title: 'Таблица производных' },
   { id: 'integrals', title: 'Таблица интегралов' },
 ]
@@ -45,17 +39,16 @@ const sinRows: SinRow[] = [
   { deg: '360°', rad: '2\\pi', sin: '0' },
 ]
 
-const logRows: LogRow[] = [
-  { n: '1', lg: '0', ln: '0' },
-  { n: '2', lg: '0.3010', ln: '0.6931' },
-  { n: '3', lg: '0.4771', ln: '1.0986' },
-  { n: '4', lg: '0.6021', ln: '1.3863' },
-  { n: '5', lg: '0.6990', ln: '1.6094' },
-  { n: '6', lg: '0.7782', ln: '1.7918' },
-  { n: '7', lg: '0.8451', ln: '1.9459' },
-  { n: '8', lg: '0.9031', ln: '2.0794' },
-  { n: '9', lg: '0.9542', ln: '2.1972' },
-  { n: '10', lg: '1', ln: '2.3026' },
+const logPropertyRows: PairRow[] = [
+  { first: '\\log_a 1 = 0', second: 'Логарифм единицы' },
+  { first: '\\log_a a = 1', second: 'Логарифм основания' },
+  { first: '\\log_a (xy) = \\log_a x + \\log_a y', second: 'Логарифм произведения' },
+  { first: '\\log_a \\dfrac{x}{y} = \\log_a x - \\log_a y', second: 'Логарифм частного' },
+  { first: '\\log_a x^n = n \\log_a x', second: 'Логарифм степени' },
+  { first: 'a^{\\log_a x} = x', second: 'Основное логарифмическое тождество' },
+  { first: '\\log_a x = \\dfrac{\\log_b x}{\\log_b a}', second: 'Переход к новому основанию' },
+  { first: '\\log_a b = \\dfrac{1}{\\log_b a}', second: 'Взаимная замена оснований' },
+  { first: '\\log_{a^n} b = \\dfrac{1}{n} \\log_a b', second: 'Логарифм по основанию степени' },
 ]
 
 const derivativeRows: PairRow[] = [
@@ -145,24 +138,23 @@ const integralRows: PairRow[] = [
     </section>
 
     <section id="logarithms" class="scroll-mt-20 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-      <h2 class="text-xl font-semibold text-slate-900">Таблица логарифмов</h2>
+      <h2 class="text-xl font-semibold text-slate-900">Свойства логарифмов</h2>
       <p class="mt-1.5 text-sm text-slate-500">
-        Десятичный (lg) и натуральный (ln) логарифмы чисел от 1 до 10.
+        Основные свойства и тождества. Всюду <MathTex tex="a > 0" />, <MathTex tex="a \\neq 1" />,
+        <MathTex tex="x > 0" />, <MathTex tex="y > 0" />, <MathTex tex="b > 0" />.
       </p>
       <div class="md-content mt-4 overflow-x-auto">
         <table class="w-full">
           <thead>
             <tr>
-              <th class="w-1/3 text-left">n</th>
-              <th class="w-1/3 text-left">lg n</th>
-              <th class="text-left">ln n</th>
+              <th class="w-1/2 text-left">Свойство</th>
+              <th class="text-left">Название</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="row in logRows" :key="row.n">
-              <td>{{ row.n }}</td>
-              <td><MathTex :tex="row.lg" /></td>
-              <td><MathTex :tex="row.ln" /></td>
+            <tr v-for="(row, index) in logPropertyRows" :key="index">
+              <td><MathTex :tex="row.first" /></td>
+              <td><MathTex :tex="row.second" /></td>
             </tr>
           </tbody>
         </table>
